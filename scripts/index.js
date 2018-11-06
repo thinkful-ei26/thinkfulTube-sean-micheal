@@ -39,7 +39,7 @@ const BASE_URL = 'https://www.googleapis.com/youtube/v3/search';
 //
 // TEST IT! Execute this function and console log the results inside the callback.
 const fetchVideos = function(searchTerm, callback) {
-  const query = {'part' : 'snippet', 'maxResults' : '25', 'q' : 'surfing', key: API_KEY};
+  const query = {'part' : 'snippet', 'maxResults' : '5', 'q' : 'surfing', key: API_KEY};
   $.getJSON(BASE_URL, query, callback);
 };
 
@@ -76,9 +76,9 @@ const decorateResponse = function(response) {
 // 1. Using the decorated object, return an HTML string containing all the expected
 // TEST IT!
 const generateVideoItemHtml = function(video) {
-  return `<li>
+  return `<li data-video-id="${video.id}">
           <span>${video.itemId} : ${video.title}</span>
-          <img url=${video.thumbnail.default}>
+          <img src=${video.thumbnail.default.url}/>
           </li>`
 };
 
@@ -92,7 +92,8 @@ const generateVideoItemHtml = function(video) {
 // TEST IT!
 const addVideosToStore = function(videos) {
   console.log(store.videos);
-  store.videos = videos.map(item => generateVideoItemHtml(item));
+  store.videos = videos;
+  
 };
 
 
@@ -105,8 +106,8 @@ const addVideosToStore = function(videos) {
 // 2. Add this array of DOM elements to the appropriate DOM element
 // TEST IT!
 const render = function() {
-  console.log(store.videos);
-  $('results').html(store.videos);
+  const html = store.videos.map(video => generateVideoItemHtml(video));
+  $('.results').html(html);
 };
 
 /**
