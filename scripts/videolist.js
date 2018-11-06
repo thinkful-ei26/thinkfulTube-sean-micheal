@@ -1,18 +1,21 @@
 /* global api,store */
+/* eslint-env jquery */
 'use strict';
 
+// eslint-disable-next-line no-unused-vars
 const videolist = (function () {
     
     function generateListItem(video) {
         return `
         <li data-video-id="${video.id}">
           <h3>${video.title}</h3>
-          <img src=${video.thumbnail} />
+          <img src=${video.thumbnail} alt="video thumbnail" />
         </li>`;
     }
 
     function render() {
         $('.results').html(store.videos.map( video => generateListItem(video)));
+        $('.results-heading')[0].innerText = `${store.videos.length} results`;
     }
 
     function handleFormSubmit() {
@@ -23,7 +26,7 @@ const videolist = (function () {
                 store.setVideos(api.decorateResponse(response));
                 render();
             });
-            $('#search-term').val(''); 
+            $('#search-term').val('');
         })
     } 
 
@@ -31,6 +34,6 @@ const videolist = (function () {
         handleFormSubmit();
     }
 
-    return {bindEventListeners,render}
+    return {bindEventListeners,render};
 
 })();

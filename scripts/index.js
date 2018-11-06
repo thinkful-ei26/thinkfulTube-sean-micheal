@@ -7,3 +7,5 @@ $(function () {
   videolist.bindEventListeners(); 
   // 1. Run `handleFormSubmit` to bind the event listener to the DOM
 });
+
+console.log($('.results-heading'));

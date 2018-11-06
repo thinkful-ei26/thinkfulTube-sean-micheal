@@ -12,7 +12,7 @@ const api = (function() {
   }
   function decorateResponse(response) {
     return response.items.map(item => {return{id: item.id.videoId, thumbnail: item.snippet.thumbnails.default.url , title: item.snippet.title};});
-  };
+  }
 
   return {fetchVideos, decorateResponse};
 }());

@@ -8,12 +8,15 @@
     <title>Youtube Api</title>
 </head>
 <body>
+    <main>
     <h1>Youtube Api</h1>
     <form class ='submission-form'>
-        <input type="text" id="search-term" />
-        <input type="submit" value="Go" />
+        <input aria-label="Search input for youtube api" type="text" id="search-term" />
+        <input aria-label="Submit input button" type="submit" value="Go" />
     </form>
+    <h2 aria-live="assertive" class="results-heading">0 results</h2>
     <ul class='results'></ul>
+    </main>
 
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="scripts/store.js"></script>
