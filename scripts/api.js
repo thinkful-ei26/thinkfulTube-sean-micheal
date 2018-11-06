@@ -10,6 +10,9 @@ const api = (function() {
     const query = {'part' : 'snippet', 'maxResults' : '5', 'q' : searchTerm, key: API_KEY};
     $.getJSON(BASE_URL, query, callback);
   }
+  function decorateResponse(response) {
+    return response.items.map(item => {return{id: item.id.videoId, thumbnail: item.snippet.thumbnails.default.url , title: item.snippet.title};});
+  };
 
-  return {BASE_URL, fetchVideos};
+  return {fetchVideos, decorateResponse};
 }());
