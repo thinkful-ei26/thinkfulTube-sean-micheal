@@ -1,7 +1,6 @@
+/* global store, api */
 /* eslint-env jquery */
 'use strict';
-
-const API_KEY = 'AIzaSyDDVkbWFYCM-JBILCu4Qb7xmbkMz8tA6Rw';
 
 /*
   We want our store to hold an array of "decorated" video objects - i.e. objects that
@@ -16,32 +15,6 @@ const API_KEY = 'AIzaSyDDVkbWFYCM-JBILCu4Qb7xmbkMz8tA6Rw';
     thumbnail: 'https://img.youtube.com/some/thumbnail.jpg'
   }
 */
-const store = {
-  videos: []
-};
-
-// TASK: Add the Youtube Search API Base URL here:
-// Documentation is here: https://developers.google.com/youtube/v3/docs/search/list#usage
-const BASE_URL = 'https://www.googleapis.com/youtube/v3/search';
-
-/**
- * @function fetchVideos
- * Async function, responsible for calling the Youtube API with jQuery, constructing
- * the correct query object, and passing along the callback into the AJAX call.
- * @param {string}   searchTerm
- * @param {function} callback
- */
-// TASK:
-// 1. Use `searchTerm` to construct the right query object based on the Youtube API docs
-//    - Refer to curriculum assignment for help with the required parameters
-// 2. Make a getJSON call using the query object and sending the provided callback in 
-//    as the last argument
-//
-// TEST IT! Execute this function and console log the results inside the callback.
-const fetchVideos = function(searchTerm, callback) {
-  const query = {'part' : 'snippet', 'maxResults' : '5', 'q' : searchTerm, key: API_KEY};
-  $.getJSON(BASE_URL, query, callback);
-};
 
 /**
  * @function decorateResponse
@@ -80,20 +53,6 @@ const generateVideoItemHtml = function(video) {
 };
 
 /**
- * @function addVideosToStore
- * Store modification function to set decorated video objects
- * @param {array} videos - decorated video objects
- */
-// TASK:
-// 1. Set the received array as the value held in store.videos
-// TEST IT!
-const addVideosToStore = function(videos) {
-  // console.log(store.videos);
-  store.videos = videos;
-};
-
-
-/**
  * @function render
  * Responsible for scanning store and rendering the video list to DOM
  */
@@ -126,8 +85,8 @@ const handleFormSubmit = function() {
   $('.submission-form').submit(event => {
     event.preventDefault();
     //console.log($('.submission-form input').val());
-    fetchVideos($('.submission-form input').val(), (response) => {
-      addVideosToStore(decorateResponse(response));
+    api.fetchVideos($('.submission-form input').val(), (response) => {
+      store.setVideos(decorateResponse(response));
       render();
     });
     $('#search-term').val(''); // clear input field
