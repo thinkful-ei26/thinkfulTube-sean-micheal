@@ -39,7 +39,7 @@ const BASE_URL = 'https://www.googleapis.com/youtube/v3/search';
 //
 // TEST IT! Execute this function and console log the results inside the callback.
 const fetchVideos = function(searchTerm, callback) {
-  const query = {'part' : 'snippet', 'maxResults' : '5', 'q' : 'surfing', key: API_KEY};
+  const query = {'part' : 'snippet', 'maxResults' : '5', 'q' : searchTerm, key: API_KEY};
   $.getJSON(BASE_URL, query, callback);
 };
 
@@ -59,11 +59,7 @@ const fetchVideos = function(searchTerm, callback) {
 // TEST IT! Grab an example API response and send it into the function - make sure
 // you get back the object you want.
 const decorateResponse = function(response) {
-
-  const tempArr = response.items.map(item => {return{itemId: item.id.videoId, thumbnail : item.snippet.thumbnails , title: item.snippet.title}});
-  addVideosToStore(tempArr);
-  render();
-  return tempArr
+  return response.items.map(item => {return{id: item.id.videoId, thumbnail: item.snippet.thumbnails.default.url , title: item.snippet.title};});
 };
 
 /**
@@ -76,10 +72,11 @@ const decorateResponse = function(response) {
 // 1. Using the decorated object, return an HTML string containing all the expected
 // TEST IT!
 const generateVideoItemHtml = function(video) {
-  return `<li data-video-id="${video.id}">
-          <span>${video.itemId} : ${video.title}</span>
-          <img src=${video.thumbnail.default.url}/>
-          </li>`
+  return `
+    <li data-video-id="${video.id}">
+      <h3>${video.title}</h3>
+      <img src=${video.thumbnail} />
+    </li>`;
 };
 
 /**
@@ -91,9 +88,8 @@ const generateVideoItemHtml = function(video) {
 // 1. Set the received array as the value held in store.videos
 // TEST IT!
 const addVideosToStore = function(videos) {
-  console.log(store.videos);
+  // console.log(store.videos);
   store.videos = videos;
-  
 };
 
 
@@ -130,7 +126,11 @@ const handleFormSubmit = function() {
   $('.submission-form').submit(event => {
     event.preventDefault();
     //console.log($('.submission-form input').val());
-    fetchVideos($('.submission-form input').val(), decorateResponse);
+    fetchVideos($('.submission-form input').val(), (response) => {
+      addVideosToStore(decorateResponse(response));
+      render();
+    });
+    $('#search-term').val(''); // clear input field
   });
 };
 
