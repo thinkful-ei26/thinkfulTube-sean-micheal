@@ -14,19 +14,28 @@ const videolist = (function () {
     }
 
     function render() {
-        $('.results').html(store.videos.map( video => generateListItem(video)));
-        $('.results-heading')[0].innerText = `${store.videos.length} results`;
+        if(store.isLoading){
+            $('.results').html('');
+            $('.results-heading').text("Loading...");
+        }else{
+            $('.results').html(store.videos.map( video => generateListItem(video)));
+            $('.results-heading').text(`${store.videos.length} results`);
+        }
+        
     }
 
     function handleFormSubmit() {
         $('.submission-form').submit( event => {
             event.preventDefault();
+            store.isLoading = true;
+            render();
             console.log($('.submission-form input').val());
             api.fetchVideos($('.submission-form input').val(), (response) => {
                 store.setVideos(api.decorateResponse(response));
+                store.isLoading = false;
                 render();
             });
-            $('#search-term').val('');
+            //$('#search-term').val('');
         })
     } 
 
